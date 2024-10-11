@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { AuthRefreshToken } from './entities/refresh-token-blacklist.entity';
+import { RefreshTokenBlacklist } from './entities/refresh-token-blacklist.entity';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { JwtStrategy } from './strategies/jwt.startegy';
 import { LocalStrategy } from './strategies/local.strategy';
@@ -16,7 +16,7 @@ import { LocalStrategy } from './strategies/local.strategy';
  */
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AuthRefreshToken]),
+    TypeOrmModule.forFeature([RefreshTokenBlacklist]),
     UserModule,
     PassportModule,
     JwtModule.registerAsync({
