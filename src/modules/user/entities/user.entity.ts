@@ -2,20 +2,10 @@ import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { BaseTable } from 'src/common/dto/base-table.dto';
 import { Event } from 'src/modules/event/entities/event.entity';
-import { City } from 'src/modules/location/entities/city.entity';
-import { Country } from 'src/modules/location/entities/country.entity';
-import { StateCountry } from 'src/modules/location/entities/state-country.entity';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  Generated,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany
-} from 'typeorm';
+import { City } from 'src/modules/location/entities/cities.entity';
+import { Country } from 'src/modules/location/entities/countries.entity';
+import { StateCountry } from 'src/modules/location/entities/states.entity';
+import { BeforeInsert, BeforeUpdate, Column, Entity, Generated, ManyToOne, OneToMany } from 'typeorm';
 import { UserGender } from './user-gender.entity';
 import { UserStatus } from './user-status.entity';
 import { UserType } from './user-type.entity';
@@ -62,13 +52,7 @@ export class UserTable extends BaseTable {
   @Column('int')
   genderId: number;
 
-  @Column('int')
-  countryId: number;
-
-  @Column('int')
-  stateCountryId: number;
-
-  @Column('int')
+  @Column('mediumint', { unsigned: true })
   cityId: number;
 
   @Column('int', { default: 1 })
@@ -104,12 +88,7 @@ export class User extends UserTable {
   @OneToMany(() => UserWeight, (userWeight) => userWeight.user)
   weights: UserWeight[];
 
-  @ManyToMany(() => Event, (event) => event.participants)
-  @JoinTable({
-    name: 'event_participant',
-    joinColumn: { name: 'userId', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'eventId', referencedColumnName: 'id' }
-  })
+  @OneToMany(() => Event, (event) => event.participants)
   events: Event[];
 
   /**

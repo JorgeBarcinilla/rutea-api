@@ -1,19 +1,5 @@
-import {
-  IsBoolean,
-  IsDate,
-  IsInt,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUrl,
-  MinDate,
-  ValidateNested
-} from 'class-validator';
+import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, MinDate } from 'class-validator';
 import { BaseTable } from 'src/common/dto/base-table.dto';
-import { CreateCityDto } from 'src/modules/location/dto/city/create-city.dto';
-import { CreateCountryDto } from 'src/modules/location/dto/country/create-country.dto';
-import { CreateStateCountryDto } from 'src/modules/location/dto/state-country/create-state-country.dto';
 import { EventTable } from '../../entities/event.entity';
 
 /**
@@ -98,16 +84,4 @@ export class CreateEventDto implements Omit<EventTable, keyof BaseTable> {
   @IsOptional()
   @IsInt()
   eventStatusId: number;
-
-  @IsOptional()
-  @ValidateNested()
-  country: CreateCountryDto | null;
-
-  @IsOptional()
-  @ValidateNested()
-  stateCountry: CreateStateCountryDto | null;
-
-  @IsOptional()
-  @ValidateNested()
-  city: CreateCityDto | null;
 }

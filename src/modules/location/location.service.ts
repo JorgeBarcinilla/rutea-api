@@ -1,18 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { CreateCityDto } from './dto/city/create-city.dto';
-import { UpdateCityDto } from './dto/city/update-city.dto';
-import { CreateCountryDto } from './dto/country/create-country.dto';
-import { UpdateCountryDto } from './dto/country/update-country.dto';
-import { CreateStateCountryDto } from './dto/state-country/create-state-country.dto';
-import { UpdateStateCountryDto } from './dto/state-country/update-state-country.dto';
-import { CreateTimezoneDto } from './dto/timezone/create-timezone.dto';
-import { UpdateTimezoneDto } from './dto/timezone/update-timezone.dto';
-import { City } from './entities/city.entity';
-import { Country } from './entities/country.entity';
-import { StateCountry } from './entities/state-country.entity';
-import { Timezone } from './entities/timezone.entity';
+import { City } from './entities/cities.entity';
+import { Country } from './entities/countries.entity';
+import { StateCountry } from './entities/states.entity';
 
 /**
  *
@@ -25,26 +16,15 @@ export class LocationService {
     @InjectRepository(Country)
     private countryRepository: Repository<Country>,
     @InjectRepository(StateCountry)
-    private stateCountryRepository: Repository<StateCountry>,
-    @InjectRepository(Timezone)
-    private timezoneRepository: Repository<Timezone>
+    private stateCountryRepository: Repository<StateCountry>
   ) {}
-
-  /**
-   * Método para crear una ciudad
-   * @param {CreateCityDto} createCityDto - Datos de la ciudad a crear
-   * @returns {Promise<City>} - Ciudad creada
-   */
-  createCity(createCityDto: CreateCityDto): Promise<City> {
-    return this.cityRepository.save(createCityDto);
-  }
 
   /**
    * Método para obtener todas las ciudades
    * @returns {Promise<City[]>} - Lista de ciudades
    */
   findAllCity(): Promise<City[]> {
-    return this.cityRepository.find();
+    return this.cityRepository.find({ relations: { stateCountry: { country: true } } });
   }
 
   /**
@@ -53,7 +33,7 @@ export class LocationService {
    * @returns {Promise<City>} - Ciudad encontrada
    */
   findOneCity(where: FindOptionsWhere<City> | FindOptionsWhere<City>[]): Promise<City> {
-    return this.cityRepository.findOne({ where });
+    return this.cityRepository.findOne({ where, relations: { stateCountry: { country: true } } });
   }
 
   /**
@@ -62,18 +42,7 @@ export class LocationService {
    * @returns {Promise<City[]>} - Lista de ciudades encontradas
    */
   findCity(where: FindOptionsWhere<City> | FindOptionsWhere<City>[]): Promise<City[]> {
-    return this.cityRepository.find({ where });
-  }
-
-  /**
-   * Método para actualizar una ciudad
-   * @param {FindOptionsWhere<City>} where - Id de la ciudad
-   * @param {UpdateCityDto} updateCityDto - Datos de la ciudad a actualizar
-   * @returns {Promise<boolean>} - Retorna true si se actualizó la ciudad
-   */
-  async updateCity(where: FindOptionsWhere<City>, updateCityDto: UpdateCityDto): Promise<boolean> {
-    const result = await this.cityRepository.update(where, updateCityDto);
-    return result.affected > 0;
+    return this.cityRepository.find({ where, relations: { stateCountry: { country: true } } });
   }
 
   /**
@@ -87,19 +56,10 @@ export class LocationService {
   }
 
   /**
-   * Método para crear un país
-   * @param {CreateCountryDto} createCountryDto - Datos del país a crear
-   * @returns {Promise<Country>} - País creado
-   */
-  createCountry(createCountryDto: CreateCountryDto): Promise<Country> {
-    return this.countryRepository.save(createCountryDto);
-  }
-
-  /**
    * Método para obtener todos los países
    * @returns {Promise<Country[]>} - Lista de países
    */
-  findAllCountry(): Promise<Country[]> {
+  findAllCountries(): Promise<Country[]> {
     return this.countryRepository.find();
   }
 
@@ -109,7 +69,7 @@ export class LocationService {
    * @returns {Promise<Country>} - País encontrado
    */
   findOneCountry(where: FindOptionsWhere<Country> | FindOptionsWhere<Country>[]): Promise<Country> {
-    return this.countryRepository.findOne({ where });
+    return this.countryRepository.findOne({ where, relations: { statesCountry: true } });
   }
 
   /**
@@ -117,19 +77,8 @@ export class LocationService {
    * @param {FindOptionsWhere<Country> | FindOptionsWhere<Country>[]} where - Condiciones de búsqueda
    * @returns {Promise<Country[]>} - Lista de países encontrados
    */
-  findCountry(where: FindOptionsWhere<Country> | FindOptionsWhere<Country>[]): Promise<Country[]> {
-    return this.countryRepository.find({ where });
-  }
-
-  /**
-   * Método para actualizar un país
-   * @param {FindOptionsWhere<Country>} where - Id del país
-   * @param {UpdateCountryDto} updateCountryDto - Datos del país a actualizar
-   * @returns {Promise<boolean>} - Retorna true si se actualizó el país
-   */
-  async updateCountry(where: FindOptionsWhere<Country>, updateCountryDto: UpdateCountryDto): Promise<boolean> {
-    const result = await this.countryRepository.update(where, updateCountryDto);
-    return result.affected > 0;
+  findCountries(where: FindOptionsWhere<Country> | FindOptionsWhere<Country>[]): Promise<Country[]> {
+    return this.countryRepository.find({ where, relations: { statesCountry: true } });
   }
 
   /**
@@ -140,15 +89,6 @@ export class LocationService {
   async removeCountry(where: FindOptionsWhere<Country>): Promise<boolean> {
     const result = await this.countryRepository.delete(where);
     return result.affected > 0;
-  }
-
-  /**
-   * Método para crear un estado/provincia
-   * @param {CreateStateCountryDto} createStateCountryDto - Datos del estado/provincia a crear
-   * @returns {Promise<StateCountry>} - Estado/provincia creado
-   */
-  createStateCountry(createStateCountryDto: CreateStateCountryDto): Promise<StateCountry> {
-    return this.stateCountryRepository.save(createStateCountryDto);
   }
 
   /**
@@ -165,7 +105,7 @@ export class LocationService {
    * @returns {Promise<StateCountry>} - Estado/provincia encontrado
    */
   findOneStateCountry(where: FindOptionsWhere<StateCountry> | FindOptionsWhere<StateCountry>[]): Promise<StateCountry> {
-    return this.stateCountryRepository.findOne({ where });
+    return this.stateCountryRepository.findOne({ where, relations: { country: true, cities: true } });
   }
 
   /**
@@ -174,21 +114,7 @@ export class LocationService {
    * @returns {Promise<StateCountry[]>} - Lista de estados/provincias encontrados
    */
   findStateCountry(where: FindOptionsWhere<StateCountry> | FindOptionsWhere<StateCountry>[]): Promise<StateCountry[]> {
-    return this.stateCountryRepository.find({ where });
-  }
-
-  /**
-   * Método para actualizar un estado/provincia
-   * @param {FindOptionsWhere<StateCountry>} where - Id del estado/provincia
-   * @param {UpdateStateCountryDto} updateStateCountryDto - Datos del estado/provincia a actualizar
-   * @returns {Promise<boolean>} - Retorna true si se actualizó el estado/provincia
-   */
-  async updateStateCountry(
-    where: FindOptionsWhere<StateCountry>,
-    updateStateCountryDto: UpdateStateCountryDto
-  ): Promise<boolean> {
-    const result = await this.stateCountryRepository.update(where, updateStateCountryDto);
-    return result.affected > 0;
+    return this.stateCountryRepository.find({ where, relations: { country: true, cities: true } });
   }
 
   /**
@@ -198,62 +124,6 @@ export class LocationService {
    */
   async removeStateCountry(where: FindOptionsWhere<StateCountry>): Promise<boolean> {
     const result = await this.stateCountryRepository.delete(where);
-    return result.affected > 0;
-  }
-
-  /**
-   * Método para crear una zona horaria
-   * @param {CreateTimezoneDto} createTimezoneDto - Datos de la zona horaria a crear
-   * @returns {Promise<Timezone>} - Zona horaria creada
-   */
-  createTimezone(createTimezoneDto: CreateTimezoneDto): Promise<Timezone> {
-    return this.timezoneRepository.save(createTimezoneDto);
-  }
-
-  /**
-   * Método para obtener todas las zonas horarias
-   * @returns {Promise<Timezone[]>} - Lista de zonas horarias
-   */
-  findAllTimezone(): Promise<Timezone[]> {
-    return this.timezoneRepository.find();
-  }
-
-  /**
-   * Método para obtener una zona horaria
-   * @param {FindOptionsWhere<Timezone> | FindOptionsWhere<Timezone>[]} where - Id de la zona horaria
-   * @returns {Promise<Timezone>} - Zona horaria encontrada
-   */
-  findOneTimezone(where: FindOptionsWhere<Timezone> | FindOptionsWhere<Timezone>[]): Promise<Timezone> {
-    return this.timezoneRepository.findOne({ where });
-  }
-
-  /**
-   * Método para obtener varias zonas horarias
-   * @param {FindOptionsWhere<Timezone> | FindOptionsWhere<Timezone>[]} where - Condiciones de búsqueda
-   * @returns {Promise<Timezone[]>} - Lista de zonas horarias encontradas
-   */
-  findTimezone(where: FindOptionsWhere<Timezone> | FindOptionsWhere<Timezone>[]): Promise<Timezone[]> {
-    return this.timezoneRepository.find({ where });
-  }
-
-  /**
-   * Método para actualizar una zona horaria
-   * @param {FindOptionsWhere<Timezone>} where - Id de la zona horaria
-   * @param {UpdateTimezoneDto} updateTimezoneDto - Datos de la zona horaria a actualizar
-   * @returns {Promise<boolean>} - Retorna true si se actualizó la zona horaria
-   */
-  async updateTimezone(where: FindOptionsWhere<Timezone>, updateTimezoneDto: UpdateTimezoneDto): Promise<boolean> {
-    const result = await this.timezoneRepository.update(where, updateTimezoneDto);
-    return result.affected > 0;
-  }
-
-  /**
-   * Método para eliminar una zona horaria
-   * @param {FindOptionsWhere<Timezone>} where - Id de la zona horaria
-   * @returns {Promise<boolean>} - Retorna true si se eliminó la zona horaria
-   */
-  async removeTimezone(where: FindOptionsWhere<Timezone>): Promise<boolean> {
-    const result = await this.timezoneRepository.delete(where);
     return result.affected > 0;
   }
 }

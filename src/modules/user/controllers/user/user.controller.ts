@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { CreateUserDto } from './dto/user/create-user.dto';
-import { UpdateUserDto } from './dto/user/update-user.dto';
-import { UserQueryParamsRequestDto } from './dto/user/user-request.dto';
-import { User } from './entities/user.entity';
-import { UserService } from './user.service';
+import { CreateUserDto } from '../../dto/user/create-user.dto';
+import { UpdateUserDto } from '../../dto/user/update-user.dto';
+import { UserQueryParamsRequestDto } from '../../dto/user/user-request.dto';
+import { User } from '../../entities/user.entity';
+import { UserService } from '../../services/user/user.service';
 
 /**
- *
+ * Controlador para gestionar los endpoints de la entidad User
  */
 @Controller('user')
 export class UserController {

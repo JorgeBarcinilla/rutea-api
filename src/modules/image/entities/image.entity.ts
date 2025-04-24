@@ -1,5 +1,5 @@
 import { BaseTable } from 'src/common/dto/base-table.dto';
-import { Column, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { ImageStorage } from './image-storage.entity';
 
 /**
@@ -19,6 +19,7 @@ export class ImageTable extends BaseTable {
 /**
  * Entidad que representa la tabla de imagenes en la base de datos
  */
+@Entity()
 export class Image extends ImageTable {
   @ManyToOne(() => ImageStorage)
   storage: ImageStorage;

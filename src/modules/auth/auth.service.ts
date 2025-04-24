@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../user/dto/user/create-user.dto';
 import { User } from '../user/entities/user.entity';
-import { UserService } from '../user/user.service';
+import { UserService } from '../user/services/user/user.service';
 import { AuthTokenPayload, AuthTokenPayloadValidateInfo, LoginResponseDto } from './dto/login.dto';
 import { RefreshTokenBlacklist } from './entities/refresh-token-blacklist.entity';
 

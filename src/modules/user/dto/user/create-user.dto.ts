@@ -8,13 +8,9 @@ import {
   IsString,
   IsUrl,
   MaxDate,
-  MinLength,
-  ValidateNested
+  MinLength
 } from 'class-validator';
 import { BaseTable } from 'src/common/dto/base-table.dto';
-import { CreateCityDto } from 'src/modules/location/dto/city/create-city.dto';
-import { CreateCountryDto } from 'src/modules/location/dto/country/create-country.dto';
-import { CreateStateCountryDto } from 'src/modules/location/dto/state-country/create-state-country.dto';
 import { UserTable } from '../../entities/user.entity';
 
 /**
@@ -70,22 +66,5 @@ export class CreateUserDto implements Omit<UserTable, keyof BaseTable | 'uuid' |
 
   @IsNotEmpty()
   @IsInt()
-  countryId: number;
-
-  @IsNotEmpty()
-  @IsInt()
-  stateCountryId: number;
-
-  @IsNotEmpty()
-  @IsInt()
   cityId: number;
-
-  @ValidateNested()
-  country: CreateCountryDto;
-
-  @ValidateNested()
-  stateCountry: CreateStateCountryDto;
-
-  @ValidateNested()
-  city: CreateCityDto;
 }

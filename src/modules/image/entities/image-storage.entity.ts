@@ -1,5 +1,5 @@
 import { BasicTable } from 'src/common/dto/basic-table.dto';
-import { Column, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { Image } from './image.entity';
 
 /**
@@ -28,6 +28,7 @@ export class ImageStorageTable extends BasicTable {
 /**
  * Entidad que representa la tabla del servicio de almacenamiento de imagenes en la base de datos
  */
+@Entity()
 export class ImageStorage extends ImageStorageTable {
   @OneToMany(() => Image, (image) => image.storage)
   images: Image[];

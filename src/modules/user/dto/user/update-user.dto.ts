@@ -12,9 +12,9 @@ import {
   ValidateNested
 } from 'class-validator';
 import { BaseTable } from 'src/common/dto/base-table.dto';
-import { City } from 'src/modules/location/entities/city.entity';
-import { Country } from 'src/modules/location/entities/country.entity';
-import { StateCountry } from 'src/modules/location/entities/state-country.entity';
+import { City } from 'src/modules/location/entities/cities.entity';
+import { Country } from 'src/modules/location/entities/countries.entity';
+import { StateCountry } from 'src/modules/location/entities/states.entity';
 import { UserTable } from '../../entities/user.entity';
 
 /**

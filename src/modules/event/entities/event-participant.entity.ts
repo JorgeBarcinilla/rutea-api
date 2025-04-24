@@ -6,7 +6,7 @@ import { EventParticipantStatus } from './event-participant-status.entity';
 import { Event } from './event.entity';
 
 /**
- *
+ * Clase que representa la tabla de participantes de eventos en la base de datos
  */
 export class EventParticipantTable extends BaseTable {
   @Generated('uuid')

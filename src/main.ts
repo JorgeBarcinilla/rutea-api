@@ -8,6 +8,7 @@ import { AppModule } from './app.module';
  */
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api/v1');
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   await app.listen(3000);
